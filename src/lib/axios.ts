@@ -1,0 +1,35 @@
+import axios from 'axios';
+import { getSession, SESSION_KEY } from './utils';
+import secureLocalStorage from 'react-secure-storage';
+
+const baseUrl = import.meta.env.VITE_API_URL ?? '';
+
+export const globalInstance = axios.create({
+  baseURL: baseUrl,
+  timeout: 3000,
+});
+
+export const privateInstance = axios.create({
+  baseURL: baseUrl,
+  timeout: 3000,
+});
+
+privateInstance.interceptors.request.use((config) => {
+  const session = getSession();
+
+  config.headers.Authorization = `JWT ${session?.token}`;
+
+  return config;
+});
+
+privateInstance.interceptors.response.use((response) => response, async (error) => {
+  if (
+    error.response?.status === 401 && error.response?.data?.message === 'Please login again!'
+  ) {
+    secureLocalStorage.removeItem(SESSION_KEY)
+
+    window.location.href = '/admin/login'
+  }
+
+  return Promise.reject(error)
+})
