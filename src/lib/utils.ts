@@ -17,6 +17,7 @@ export function getSession() {
   if (!session) {
     return null;
   }
+  console.log(session)
 
   return session;
 }

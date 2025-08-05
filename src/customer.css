@@ -8,6 +8,10 @@ html {
 	color: white;
 }
 
+html, body {
+	background-color: #000
+}
+
 #Screen {
 	-webkit-mask-image: url(assets/images/backgrounds/screen.svg);
 	mask-image: url(assets/images/backgrounds/screen.svg);
